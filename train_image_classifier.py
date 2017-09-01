@@ -26,6 +26,7 @@ import inception_v2
 from tensorflow.contrib import slim
 from spatial_transformer_alpha import transformer
 
+
 NUM_TRANSFORMER = 1
 NUM_THETA_PARAMS = 4
 NUM_CLASSES = 120
@@ -45,6 +46,8 @@ cls_train_vars_scope = ['stn/classification/logits',
 
 checkpoint_exclude_scopes = ['stn/localization/logits', 'stn/classification/logits']
 
+cuda_devices = os.environ['CUDA_VISIBLE_DEVICES']
+num_gpus = len(cuda_devices.split(','))
 
 dropout_keep_prob = 0.5
 transformer_output_size = [224, 224]
@@ -73,7 +76,7 @@ tf.app.flags.DEFINE_string(
     'train_dir', save_dir,
     'Directory where checkpoints and event logs are written to.')
 
-tf.app.flags.DEFINE_integer('num_clones', 4,
+tf.app.flags.DEFINE_integer('num_clones', num_gpus,
                             'Number of model clones to deploy.')
 
 tf.app.flags.DEFINE_boolean('clone_on_cpu', False,
